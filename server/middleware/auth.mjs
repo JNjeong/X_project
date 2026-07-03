@@ -18,8 +18,8 @@ export const isAuth = async (req,res,next)=>{
     const token = authHeader.split(" ")[1]
     jwt.verify(token, config.jwt.secretKey, async (error, decoded)=>{
         if(error){
-            console.log("###ERROR: ", 토큰에러)
-            return req.status(401).json(AUTH_ERROR)
+            console.log("###ERROR: ", "토큰에러")
+            return res.status(401).json(AUTH_ERROR)
         }
         // console.log(decoded)
         const user = await authRepository.findById(decoded.id)
