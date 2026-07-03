@@ -15,3 +15,16 @@ export async function getPosts(req,res) {
     const data = await (userid? postRepository.getAllByUserid(userid): postRepository.getAll())
     res.status(200).json(data)
 }
+
+// 글번호에 대한 포스트 가져오기
+export async function getPost(req, res) {
+    const postid = req.params.postid
+    // console.log("###LOG: ",postid)
+    const data = await postRepository.getPostById(postid)
+    // console.log(data)
+    if (data){
+        res.status(200).json(data)
+    }else{
+        res.status(404).json({message: `${id}에 대한 포스트가 없습니다.`})
+    }
+} 
