@@ -16,7 +16,7 @@ export async function getPosts(req,res) {
     res.status(200).json(data)
 }
 
-// 글번호에 대한 포스트 가져오기
+// 글번호에 대한 포스트 가져오는 함수
 export async function getPost(req, res) {
     const postid = req.params.postid
     // console.log("###LOG: ",postid)
@@ -29,32 +29,33 @@ export async function getPost(req, res) {
     }
 } 
 
-// 포스트 수정
+// 포스트 수정하는 함수
 export async function updatePost(req,res) {
     const {text} = req.body
     const postid = req.params.postid
-    const userid = req.query.userid
+
+    const post = await postRepository.getPostById(postid)
+    if(!post){
+        return res.status(404).json({message:`${postid}의 포스트가 없습니다`})
+    }
+    if (post.idx !== req.id){
+        return res.sendStatus(403)
+    }
 
     if (!text || text.trim() ===""){
         return res.status(401).json({message: "내용을 입력해주세요"})
     }
     const data = await postRepository.updatePost(text, postid)
-    console.log("###LOG: ",data)
-    if(data.modifiedCount === 1){
-        // res.status(200).json(data)
-        res.status(200).json({message: "수정 완료"})
-    } else { 
-        res.status(404).json({message:"업데이트 실패"})
-    }
+    res.status(200).json(data)
 }
 
 // 포스트 삭제
 export async function deletePost(req, res) {
     const postid = req.params.postid
-    const post = await postRepository.getPostById(id)
+    const post = await postRepository.getPostById(postid)
 
     if(!post){
-        return res.status(404).json({message:`${id}의 포스트가 없습니다`})
+        return res.status(404).json({message:`${postid}의 포스트가 없습니다`})
     }
     if (post.idx !== req.id){
         return res.sendStatus(403)
