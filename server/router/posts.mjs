@@ -14,7 +14,9 @@ router.get("/:postid", isAuth, postController.getPost)
 router.post("/", isAuth, postController.createPost)
 
 // 포스트 수정
+router.put("/:postid", isAuth, postController.updatePost)
 
 // 포스트 삭제
+router.delete("/:postid", isAuth, postController.deletePost)
 
 export default router

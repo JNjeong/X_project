@@ -30,6 +30,17 @@ export async function getPostById(postid) {
     return getPosts().find({_id: new ObjectId(postid)}).next().then(mapOptionalPost)
 }
 
+// 포스트 수정
+export async function updatePost(text, postid) {
+    return getPostById(postid).then(post =>{return getPosts().updateOne(
+        { _id: new ObjectId(postid)},
+        {$set:{text}})})
+}
+
+// 포스트삭제
+export async function deletePost (postid) {
+    return getPosts().deleteOne({_id: new ObjectId(postid)})
+}
 
 function mapOptionalPost(post){
     return post ? {...post, id:post._id.toString()}: post

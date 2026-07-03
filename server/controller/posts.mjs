@@ -28,3 +28,44 @@ export async function getPost(req, res) {
         res.status(404).json({message: `${id}에 대한 포스트가 없습니다.`})
     }
 } 
+
+// 포스트 수정
+export async function updatePost(req,res) {
+    const {text} = req.body
+    const postid = req.params.postid
+    const userid = req.query.userid
+
+    if (!text || text.trim() ===""){
+        return res.status(401).json({message: "내용을 입력해주세요"})
+    }
+    const data = await postRepository.updatePost(text, postid)
+    console.log("###LOG: ",data)
+    if(data.modifiedCount === 1){
+        // res.status(200).json(data)
+        res.status(200).json({message: "수정 완료"})
+    } else { 
+        res.status(404).json({message:"업데이트 실패"})
+    }
+}
+
+// 포스트 삭제
+export async function deletePost(req, res) {
+    const postid = req.params.postid
+    const post = await postRepository.getPostById(id)
+
+    if(!post){
+        return res.status(404).json({message:`${id}의 포스트가 없습니다`})
+    }
+    if (post.idx !== req.id){
+        return res.sendStatus(403)
+    }
+    // res.sendStatus(204) //정상적인 삭제지만 보낼 메세지가 없는 경우
+    const data = await postRepository.deletePost(postid)
+    // console.log("###LOG: ",data)
+    if (data.deletedCount === 1){
+        // res.status(200).json(data)
+        res.status(200).json({message: "성공적으로 삭제 완료됬습니다."})
+    } else { 
+        res.status(404).json({message:"삭제 실패"})
+    }
+}
