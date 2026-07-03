@@ -1,5 +1,6 @@
 import express from "express"
 import * as authController from "../controller/auth.mjs"
+import { isAuth } from "../middleware/auth.mjs"
 
 const router = express.Router()
 
@@ -9,7 +10,7 @@ router.post("/signup", authController.signup)
 router.post("/login", authController.login)
 
 // 로그인 유지 체크
-router.post("/me", authController.me)
+router.get("/me", isAuth, authController.me)
 
 
 export default router
